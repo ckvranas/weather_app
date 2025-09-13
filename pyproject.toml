@@ -3,7 +3,10 @@ name = "weather_app"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "openapi-python-client == 0.26.1"
+    "openapi-python-client == 0.26.1",
+    "pydantic",
+    "fastapi",
+    "uvicorn"
 ]
 
 [build-system]
