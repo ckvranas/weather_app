@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: Packet API
+  version: 1.0.0
+
+paths:
+  /packets:
+    get:
+      summary: Get list of packets
+      operationId: getPackets
+      responses:
+        '200':
+          description: List of packets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Packet'
+
+components:
+  schemas:
+    Packet:
+      type: object
+      required:
+        - datetime
+        - station_id
+        - temperature
+        - moisture
+        - wind_speed
+        - wind_direction
+        - rain_meas
+      properties:
+        datetime:
+          type: string
+          format: date-time
+        station_id:
+          type: integer
+        temperature:
+          type: number  
+          format: float
+        moisture:
+          type: number  
+          format: float
+        wind_speed:
+          type: number
+          format: float
+        wind_direction:
+          type: string
+          enum:
+          - south
+          - north
+          - west
+          - east
+        rain_meas:
+          type: number
+          format: float
