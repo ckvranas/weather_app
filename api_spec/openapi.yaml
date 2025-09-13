@@ -39,33 +39,32 @@ components:
       properties:
         timestamp:
           type: string
-          format: date-time
         station_id:
           type: integer
-        temperature:
+        temperature_celsium:
           type: number  
           format: float
-        moisture:
+        moisture_perc:
           type: number  
           format: float
-        wind_speed:
+        wind_speed_kmh:
           type: number
           format: float
         wind_direction:
           type: string
           enum:
-          - south
-          - north
-          - west
-          - east
-        rain_meas:
+            - south
+            - north
+            - west
+            - east
+        rain_meas_mm:
           type: number
           format: float
-          
+
     ErrorResponse:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
+        type: object
+        required:
+          - message
+        properties:
+         message:
+           type: string
