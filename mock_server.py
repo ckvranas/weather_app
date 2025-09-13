@@ -9,7 +9,7 @@ app = FastAPI()
 
 # Pydantic model
 class Packet(BaseModel):
-    timestamp: str
+    datetime: str
     station_id: int
     temperature_celsium: float
     moisture_perc: float
@@ -27,16 +27,16 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     conn.execute('''
-    CREATE TABLE IF NOT EXISTS packets (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        timestamp TEXT,
-        station_id INTEGER,
-        temperature_celsium REAL,
-        moisture_perc REAL,
-        wind_speed_kmh REAL,
-        wind_direction TEXT,
-        rain_meas_mm REAL
-    )
+        CREATE TABLE IF NOT EXISTS packets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            datetime TEXT,
+            station_id INTEGER,
+            temperature_celsium REAL,
+            moisture_perc REAL,
+            wind_speed_kmh REAL,
+            wind_direction TEXT,
+            rain_meas_mm REAL
+        )
     ''')
     conn.commit()
     conn.close()
@@ -49,11 +49,11 @@ def create_packet(packet: Packet):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO packets (timestamp, station_id, temperature_celsium, moisture_perc,
+        INSERT INTO packets (datetime, station_id, temperature_celsium, moisture_perc,
                              wind_speed_kmh, wind_direction, rain_meas_mm)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', (
-        packet.timestamp,
+        packet.datetime,
         packet.station_id,
         packet.temperature_celsium,
         packet.moisture_perc,
@@ -70,7 +70,7 @@ def create_packet(packet: Packet):
 def get_packets():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT timestamp, station_id, temperature_celsium, moisture_perc, wind_speed_kmh, wind_direction, rain_meas_mm FROM packets')
+    cursor.execute('SELECT datetime, station_id, temperature_celsium, moisture_perc, wind_speed_kmh, wind_direction, rain_meas_mm FROM packets')
     rows = cursor.fetchall()
     conn.close()
     return [Packet(**dict(row)) for row in rows]
@@ -88,7 +88,7 @@ def update_packet(packet_id: int, updated: Packet):
 
     cursor.execute('''
         UPDATE packets SET
-            timestamp = ?,
+            datetime = ?,
             station_id = ?,
             temperature_celsium = ?,
             moisture_perc = ?,
@@ -97,7 +97,7 @@ def update_packet(packet_id: int, updated: Packet):
             rain_meas_mm = ?
         WHERE id = ?
     ''', (
-        updated.timestamp,
+        updated.datetime,
         updated.station_id,
         updated.temperature_celsium,
         updated.moisture_perc,
