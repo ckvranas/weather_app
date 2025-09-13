@@ -1,9 +1,7 @@
 #!/bin/bash
 
 set -e  # Exit on error
-
-REQUIREMENTS_FILE="requirements.txt"
-INSTALLED_PACKAGES_FILE="installed-packages.txt"
+source .env
 VENV_DIR=".venv"
 
 # Check if 'uv' is installed
