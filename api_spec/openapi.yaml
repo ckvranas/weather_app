@@ -17,21 +17,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Packet'
+        default:
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
     Packet:
       type: object
       required:
-        - datetime
+        - timestamp
         - station_id
-        - temperature
-        - moisture
-        - wind_speed
+        - temperature_celsium
+        - moisture_perc
+        - wind_speed_kmh
         - wind_direction
-        - rain_meas
+        - rain_meas_mm
       properties:
-        datetime:
+        timestamp:
           type: string
           format: date-time
         station_id:
@@ -55,3 +61,11 @@ components:
         rain_meas:
           type: number
           format: float
+          
+    ErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
