@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, HTTPException, Query, status, Security, Depends
+from fastapi import FastAPI, HTTPException, Query, status, Security, Depends, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 
@@ -17,6 +17,7 @@ security = HTTPBearer()
 
 # Pydantic model
 class Packet(BaseModel):
+    id: int
     datetime: str
     station_id: int
     temperature_celsium: float
@@ -105,13 +106,15 @@ def get_packets(
 @app.put("/packets/{packet_id}", response_model=Packet)
 def update_packet(packet_id: int, updated: Packet):
     conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id FROM packets WHERE id = ?', (packet_id,))
-    if cursor.fetchone() is None:
+    # Check if packet exists
+    if not cursor.execute('SELECT id FROM packets WHERE id = ?', (packet_id,)).fetchone():
         conn.close()
         raise HTTPException(status_code=404, detail="Packet not found")
 
+    # Update packet
     cursor.execute('''
         UPDATE packets SET
             datetime = ?,
@@ -132,6 +135,8 @@ def update_packet(packet_id: int, updated: Packet):
         updated.rain_meas_mm,
         packet_id
     ))
+
     conn.commit()
     conn.close()
-    return updated
+
+    return Response(status_code=204)
