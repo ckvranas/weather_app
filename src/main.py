@@ -3,13 +3,13 @@ import os
 import datetime
 from packet_api_client import Client
 from packet_api_client.api.default import get_packets
-
+from dotenv import load_dotenv
 
 from utils import inspect_response
 import argparse
 
-API_URL = "http://localhost:8000" 
-TOKEN = "my_token"
+load_dotenv()
+API_URL, TOKEN = os.getenv("API_URL"), os.getenv("TOKEN")
 
 def main() -> None:
     """Main weather app"""

@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI, HTTPException, Query, status, Security, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from dotenv import load_dotenv
 
 from pydantic import BaseModel
 from typing import List, Literal, TYPE_CHECKING
@@ -7,9 +9,8 @@ import sqlite3
 
 from datetime import datetime
 
-DB_PATH = "./packets.db"
-TOKEN = "my_token"
-
+load_dotenv()
+DB_PATH, TOKEN = os.getenv("DB_PATH"), os.getenv("TOKEN")
 
 app = FastAPI()
 security = HTTPBearer()

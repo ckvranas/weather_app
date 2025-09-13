@@ -6,7 +6,8 @@ dependencies = [
     "openapi-python-client == 0.26.1",
     "pydantic",
     "fastapi",
-    "uvicorn"
+    "uvicorn",
+    "python-dotenv"
 ]
 
 [build-system]
