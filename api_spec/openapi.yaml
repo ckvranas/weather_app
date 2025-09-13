@@ -11,6 +11,19 @@ paths:
     get:
       summary: Get list of packets
       operationId: getPackets
+      # Filters beased on datetime and station_id
+      parameters:
+        - name: datetime
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: station_id
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: List of packets

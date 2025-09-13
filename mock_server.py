@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
-from typing import List, Literal
+from typing import List, Literal, TYPE_CHECKING
 import sqlite3
+
+from datetime import datetime
 
 DB_PATH = "./packets.db"
 
@@ -67,10 +69,21 @@ def create_packet(packet: Packet):
 
 # GET /packets
 @app.get("/packets", response_model=List[Packet])
-def get_packets():
-    conn = get_db_connection()
+def get_packets(
+    datetime: None | datetime = Query(None),
+    station_id: int = Query(-1)) -> None:  
+    conn = get_db_connection() 
     cursor = conn.cursor()
-    cursor.execute('SELECT datetime, station_id, temperature_celsium, moisture_perc, wind_speed_kmh, wind_direction, rain_meas_mm FROM packets')
+    if datetime is None and station_id == -1:
+        cursor.execute('SELECT * FROM packets')
+    elif datetime is not None and station_id != -1:
+        cursor.execute('SELECT * FROM packets WHERE datetime = ? AND station_id = ?', (datetime, station_id))
+    elif datetime is not None:
+        cursor.execute('SELECT * FROM packets WHERE datetime = ?', (datetime,))
+    elif station_id != -1:
+        cursor.execute('SELECT * FROM packets WHERE station_id = ?', (station_id,))
+    else:
+        raise HTTPException(status_code=400, detail="Invalid query parameters")
     rows = cursor.fetchall()
     conn.close()
     return [Packet(**dict(row)) for row in rows]
