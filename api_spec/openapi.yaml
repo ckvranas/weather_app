@@ -11,6 +11,8 @@ paths:
     get:
       summary: Get list of packets
       operationId: getPackets
+      security:
+        - BearerAuth: []
       # Filters beased on datetime and station_id
       parameters:
         - name: datetime
@@ -41,6 +43,12 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     Packet:
       type: object

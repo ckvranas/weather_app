@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, status, Security, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
 from pydantic import BaseModel
 from typing import List, Literal, TYPE_CHECKING
 import sqlite3
@@ -6,8 +8,11 @@ import sqlite3
 from datetime import datetime
 
 DB_PATH = "./packets.db"
+TOKEN = "my_token"
+
 
 app = FastAPI()
+security = HTTPBearer()
 
 # Pydantic model
 class Packet(BaseModel):
@@ -18,6 +23,13 @@ class Packet(BaseModel):
     wind_speed_kmh: float
     wind_direction: Literal["south", "north", "west", "east"]
     rain_meas_mm: float
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Security(security)):
+    token = credentials.credentials
+    if token != TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid auth token"
+        )
 
 # Helper function to get DB connection
 def get_db_connection():
@@ -68,7 +80,7 @@ def create_packet(packet: Packet):
     return packet
 
 # GET /packets
-@app.get("/packets", response_model=List[Packet])
+@app.get("/packets", response_model=List[Packet], dependencies=[Depends(verify_token)])
 def get_packets(
     datetime: None | datetime = Query(None),
     station_id: int = Query(-1)) -> None:  
