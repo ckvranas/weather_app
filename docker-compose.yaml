@@ -7,7 +7,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ./src/mock_server/.env
+      - ./src/mock_server/.env.docker
     volumes:
       - ./src/mock_server/packets.db:/app/packets.db  # Use volume for persistence
 
@@ -20,6 +20,6 @@ services:
     depends_on:
       - mock-server
     env_file:
-      - ./src/weather_app/.env
+      - ./src/weather_app/.env.docker
     stdin_open: true   # client is interactive
     tty: true

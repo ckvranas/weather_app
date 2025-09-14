@@ -12,7 +12,7 @@ RUN pip install uv && \
 WORKDIR /app
 
 COPY mock_server.py .
-COPY .env .
+COPY .env.docker .
 COPY packets.db .
 
 EXPOSE 8000

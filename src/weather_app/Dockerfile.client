@@ -36,10 +36,10 @@ COPY ./utils.py .
 COPY ./__init__.py .
 
 # Copy environment variables file
-COPY .env . 
+COPY .env.docker .env
 
 # Set PYTHONPATH if needed so python can find your packages
 ENV PYTHONPATH=/app
 
-# Run the main entrypoint. Short delay in order the mock server to be ready
-CMD ["sh", "-c", "sleep 1 && python main.py"] 
+# Run the main entrypoint
+CMD ["sh", "-c", "python main.py"] 

@@ -10,13 +10,14 @@ if TYPE_CHECKING:
     from packet_api_client.models import Packet 
     from packet_api_client import Client
 
-load_dotenv()
+env_file = os.getenv("ENV_FILE", ".env.local")
+load_dotenv(dotenv_path=env_file)
 DUMMY_DATETIME = os.getenv("DUMMY_DATETIME")
 
 def inspect_correct_packets(
     client: Client, 
     station_id: int = -1, 
-    datetime_: datetime | None = datetime.strptime(DUMMY_DATETIME, '%Y-%m-%d %H:%M:%S.%f')
+    datetime_: datetime = datetime.strptime(DUMMY_DATETIME, '%Y-%m-%d %H:%M:%S.%f')
 ) -> None:
     """
     Inspects the response from a GET /packets request to ensure that all Packet objects have the correct type for each field.
@@ -77,10 +78,10 @@ def correct_packet_invalid_values(packet: Packet) -> bool:
     Assumed that only moisture percentage, wind speed and rain measurement values can take invalid values
     """
     is_corrected = False
-    if packet.moisture_perc <= 0.0:
+    if packet.moisture_perc < 0.0:
         packet.moisture_perc = 0.0
         is_corrected = True
-    elif packet.moisture_perc >= 100.0:
+    elif packet.moisture_perc > 100.0:
         packet.moisture_perc = 100.0
         is_corrected = True
     if packet.wind_speed_kmh < 0.0:
