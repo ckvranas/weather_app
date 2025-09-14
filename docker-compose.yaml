@@ -1,0 +1,24 @@
+services:
+  mock-server:
+    build:
+      context: ./src/mock_server
+      dockerfile: Dockerfile.mock
+    container_name: mock-server
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./src/mock_server/.env
+    volumes:
+      - ./src/mock_server/packets.db:/app/packets.db  # Use volume for persistence
+
+  weather-client:
+    build:
+      context: ./src/weather_app
+      dockerfile: Dockerfile.client
+    container_name: weather-client
+    depends_on:
+      - mock-server
+    env_file:
+      - ./src/weather_app/.env
+    stdin_open: true   # client is interactive
+    tty: true

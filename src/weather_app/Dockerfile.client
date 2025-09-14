@@ -1,0 +1,45 @@
+# --- Build stage: generate openapi client ---
+FROM python:3.11-slim AS builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install uv and openapi-python-client
+RUN pip install uv && uv pip install --system openapi-python-client
+
+WORKDIR /app
+
+# Copy only the OpenAPI spec file to generate client
+COPY ./api_spec/openapi.yaml .
+
+# Generate client code here
+RUN openapi-python-client generate --path ./openapi.yaml --output-path ./packet_api_client
+
+# --- Final stage: minimal image with generated client and app ---
+FROM python:3.11-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install runtime dependencies with uv
+RUN pip install uv && uv pip install --system python-dotenv
+
+WORKDIR /app/weather_app
+
+# Copy generated client source code from builder stage
+COPY --from=builder /app/packet_api_client ./packet_api_client
+
+# Install client package in editable mode
+RUN uv pip install --system -e ./packet_api_client
+
+# Copy your app source files
+COPY ./main.py .
+COPY ./utils.py .
+COPY ./__init__.py .
+
+# Copy environment variables file
+COPY .env . 
+
+# Set PYTHONPATH if needed so python can find your packages
+ENV PYTHONPATH=/app
+
+# Run the main entrypoint
+CMD ["python", "main.py"]
