@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 def inspect_correct_packets(
     client: Client, 
     station_id: int = -1, 
-    datetime: datetime | None = None
+    datetime_: datetime | None = None
 ) -> None:
     """
     Inspects the response from a GET /packets request to ensure that all Packet objects have the correct type for each field.
@@ -20,8 +20,9 @@ def inspect_correct_packets(
     This function will also attempt to update the packets through the API if they have invalid values.
     """
     try:
-        response = get_packets.sync(client=client, station_id=station_id, 
-                                    datetime_=datetime)
+        response = get_packets.sync(client=client, 
+                                    station_id=station_id, 
+                                    datetime_=datetime_)
     except Exception as e:
         print(f"Error for API call getting packets: {e}")
         return
