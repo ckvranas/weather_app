@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source .env
 VENV_DIR=".venv"
 REL_WEATHER_APP_PATH="src/weather_app"
 
