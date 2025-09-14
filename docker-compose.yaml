@@ -16,6 +16,7 @@ services:
       context: ./src/weather_app
       dockerfile: Dockerfile.client
     container_name: weather-client
+    restart: on-failure
     depends_on:
       - mock-server
     env_file:
