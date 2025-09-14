@@ -45,9 +45,9 @@ def test_none_packets(mock_get_packets: Mock, mock_update_packet: Mock) -> None:
     assert mock_update_packet.call_count == 0, "update_packet should not be called"
     assert mock_get_packets.return_value == None, "get_packets should return None"
 
-@patch('packet_api_client.api.default.get_packets.sync')
 @patch('packet_api_client.api.default.update_packet.sync')
-def test_valid_packets(mock_update_packet: Mock, mock_get_packets: Mock):
+@patch('packet_api_client.api.default.get_packets.sync')
+def test_valid_packets(mock_get_packets: Mock, mock_update_packet: Mock):
     """
     Tests that inspect_correct_packets does not call update_packet when there are valid packets in the response.
 
@@ -72,9 +72,9 @@ def test_valid_packets(mock_update_packet: Mock, mock_get_packets: Mock):
     assert mock_update_packet.call_count == 0, "update_packet should not be called"
     assert mock_get_packets.return_value == [init_packet], "get_packets should return the initial packet"
 
-@patch('packet_api_client.api.default.get_packets.sync')
 @patch('packet_api_client.api.default.update_packet.sync')
-def test_invalid_and_correct_packets(mock_update_packet: Mock, mock_get_packets: Mock):
+@patch('packet_api_client.api.default.get_packets.sync')
+def test_invalid_and_correct_packets(mock_get_packets: Mock, mock_update_packet: Mock):
     """
     Tests that inspect_correct_packets updates the packet with invalid values.
 
