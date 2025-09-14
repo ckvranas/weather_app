@@ -47,10 +47,9 @@ The application supports inspecting and correcting erroneous measurement values 
     - Press `1` to inspect and correct data based on datetime and station ID.
     - Press `2` to exit.
 
-    By providing filter inputs, the application displays filtered packets, applies corrections on erroneous fields, and updates the database. Reapplying the same filter after correction will show the updated data. Input examples with the client application are:
+    By providing filter inputs, the application displays filtered packets, applies corrections on erroneous fields, and updates the database. Reapplying the same filter after correction will show the updated data. Input example with the client application could be:
 
-I. Datetime: 2026-08-15 20:27:13.882773
-II. station-id: 8
+2026-08-15 20:27:13.882773, station-id: 8
 
 ---
 
