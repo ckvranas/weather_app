@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, HTTPException, Query, status, Security, Depends, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
-
+import json
 from pydantic import BaseModel
 from typing import List, Literal
 import sqlite3
@@ -102,7 +102,13 @@ def get_packets(
         raise HTTPException(status_code=400, detail="Invalid query parameters")
     rows = cursor.fetchall()
     conn.close()
-    return [Packet(**dict(row)) for row in rows]
+
+    packets = []
+    for row in rows:
+        row_dict = dict(row)  # Convert sqlite3.Row to dict
+        print(json.dumps(row_dict, indent=6))
+        packets.append(Packet(**row_dict))
+    return packets
 
 # PUT /packets/{packet_id}
 @app.put("/packets/{packet_id}", response_model=Packet)

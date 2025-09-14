@@ -5,6 +5,7 @@ from packet_api_client.models import Packet
 from weather_app.utils import inspect_correct_packets
 from packet_api_client import Client
 
+
 @pytest.fixture
 def client() -> Client:
     """
@@ -39,9 +40,10 @@ def test_none_packets(mock_get_packets: Mock, mock_update_packet: Mock) -> None:
     """
     # Note that inspect_correct_packets may update the packet due to the correction functionality if invalid values
     mock_get_packets.return_value = None
-    inspect_correct_packets(client)
+    ref_datetime = datetime.now()
+    inspect_correct_packets(client, station_id=-1, datetime_=ref_datetime)
     # Check if get_packets was called with the correct parameters
-    mock_get_packets.assert_called_once_with(client=client, station_id=-1)
+    mock_get_packets.assert_called_once_with(client=client, station_id=-1, datetime_=ref_datetime)
     assert mock_update_packet.call_count == 0, "update_packet should not be called"
     assert mock_get_packets.return_value == None, "get_packets should return None"
 
@@ -55,8 +57,9 @@ def test_valid_packets(mock_get_packets: Mock, mock_update_packet: Mock):
         mock_update_packet (Mock): A mock object for the update_packet method.
         mock_get_packets (Mock): A mock object for the get_packets method.
     """
+    ref_datetime = datetime.now()
     init_packet = Packet(id=1, 
-                     datetime_=datetime.now(), 
+                     datetime_=ref_datetime, 
                      station_id=1, 
                      temperature_celsius=25.5, 
                      moisture_perc=50.0, 
@@ -66,9 +69,9 @@ def test_valid_packets(mock_get_packets: Mock, mock_update_packet: Mock):
                      
     mock_get_packets.return_value = [init_packet]
     # Note that inspect_correct_packets may update the packet due to the correction functionality if invalid values
-    inspect_correct_packets(client, station_id=1)
+    inspect_correct_packets(client, station_id=1, datetime_=ref_datetime)
     # Check if get_packets was called with the correct parameters
-    mock_get_packets.assert_called_once_with(client=client, station_id=1)
+    mock_get_packets.assert_called_once_with(client=client, station_id=1, datetime_=ref_datetime)
     assert mock_update_packet.call_count == 0, "update_packet should not be called"
     assert mock_get_packets.return_value == [init_packet], "get_packets should return the initial packet"
 
@@ -85,9 +88,9 @@ def test_invalid_and_correct_packets(mock_get_packets: Mock, mock_update_packet:
     mock_update_packet: A mock object for the update_packet method.
     mock_get_packets: A mock object for the get_packets method.
     """
-    ref_detatime = datetime.now()
+    ref_datetime = datetime.now()
     init_packet = Packet(id=1, 
-                     datetime_=ref_detatime, 
+                     datetime_=ref_datetime, 
                      station_id=1, 
                      temperature_celsius=25.5, 
                      moisture_perc=50.0, 
@@ -97,10 +100,10 @@ def test_invalid_and_correct_packets(mock_get_packets: Mock, mock_update_packet:
     mock_get_packets.return_value = [init_packet] 
     # Note that inspect_correct_packets may update the packet due to the correction functionality if invalid values
     # Function updates mock_get_packets.return_value (rain_meas_mm -10.0 -> 0.0)
-    inspect_correct_packets(client, station_id=1)
+    inspect_correct_packets(client, station_id=1, datetime_=ref_datetime)
     # Create the expected updated packet
     updated_packet = Packet(id=1, 
-                     datetime_=ref_detatime, 
+                     datetime_=ref_datetime, 
                      station_id=1, 
                      temperature_celsius=25.5, 
                      moisture_perc=50.0, 
@@ -108,7 +111,7 @@ def test_invalid_and_correct_packets(mock_get_packets: Mock, mock_update_packet:
                      wind_direction="north",
                      rain_meas_mm=0.0)
     # Check if get_packets was called with the correct parameters
-    mock_get_packets.assert_called_once_with(client=client, station_id=1)
+    mock_get_packets.assert_called_once_with(client=client, station_id=1, datetime_=ref_datetime)
     # Check if updated_packets was called with the correct parameters
     mock_update_packet.assert_called_once_with(
         client=client, packet_id=updated_packet.id, body=updated_packet)

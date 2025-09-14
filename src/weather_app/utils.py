@@ -1,17 +1,22 @@
 """Helper methods to inspect the GET response"""
 from __future__ import annotations
+import os
 from typing import TYPE_CHECKING
 from packet_api_client.api.default import update_packet, get_packets
 from datetime import datetime
+from dotenv import load_dotenv
 
 if TYPE_CHECKING:
     from packet_api_client.models import Packet 
     from packet_api_client import Client
 
+load_dotenv()
+DUMMY_DATETIME = os.getenv("DUMMY_DATETIME")
+
 def inspect_correct_packets(
     client: Client, 
     station_id: int = -1, 
-    datetime_: datetime | None = None
+    datetime_: datetime | None = datetime.strptime(DUMMY_DATETIME, '%Y-%m-%d %H:%M:%S.%f')
 ) -> None:
     """
     Inspects the response from a GET /packets request to ensure that all Packet objects have the correct type for each field.
