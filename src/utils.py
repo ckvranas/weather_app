@@ -31,7 +31,7 @@ def inspect_correct_packets(
             inspect_packet_type_fields(packet)
             # Check if the packet has invalid values
             is_corrected = correct_packet_invalid_values(packet)
-            # If the packet has invalid values, update it through the API
+            # If corrected, update the packet through the API
             if is_corrected:
                 try:
                     update_packet.sync(
@@ -52,7 +52,7 @@ def inspect_packet_type_fields(packet: Packet) -> None:
     """
     assert isinstance(packet.datetime_, datetime), "Packet datetime should be a datetime object"
     assert isinstance(packet.station_id, int),   "Packet station_id should be an integer"
-    assert isinstance(packet.temperature_celsium, float), "Packet temperature_celsium should be a float"
+    assert isinstance(packet.temperature_celsius, float), "Packet temperature_celsius should be a float"
     assert isinstance(packet.moisture_perc, float), "Packet moisture percentage should be a float"
     assert isinstance(packet.wind_speed_kmh, float), "Packet wind_speed_kmh should be a float"
     assert packet.wind_direction in ("south", "north", "west", "east"), "Packet wind_direction should be one of 'south', 'north', 'west', 'east'"

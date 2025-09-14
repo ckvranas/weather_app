@@ -7,9 +7,14 @@ dependencies = [
     "pydantic",
     "fastapi",
     "uvicorn",
-    "python-dotenv"
+    "python-dotenv",
+    "pytest"
 ]
 
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/"]
+python_files = ["test.py"]

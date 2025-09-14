@@ -13,9 +13,9 @@ paths:
       operationId: getPackets
       security:
         - BearerAuth: []
-      # Filters beased on datetime and station_id
+      # Filters beased on datetime_ and station_id
       parameters:
-        - name: datetime
+        - name: datetime_
           in: query
           required: false
           schema:
@@ -87,9 +87,9 @@ components:
       type: object
       required:
         - id
-        - datetime
+        - datetime_
         - station_id
-        - temperature_celsium
+        - temperature_celsius
         - moisture_perc
         - wind_speed_kmh
         - wind_direction
@@ -97,12 +97,12 @@ components:
       properties:
         id:
           type: integer
-        datetime:
+        datetime_:
           type: string
           format: date-time
         station_id:
           type: integer
-        temperature_celsium:
+        temperature_celsius:
           type: number  
           format: float
         moisture_perc:

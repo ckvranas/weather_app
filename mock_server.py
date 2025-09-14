@@ -4,7 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 
 from pydantic import BaseModel
-from typing import List, Literal, TYPE_CHECKING
+from typing import List, Literal
 import sqlite3
 
 from datetime import datetime
@@ -18,9 +18,9 @@ security = HTTPBearer()
 # Pydantic model
 class Packet(BaseModel):
     id: int
-    datetime: str
+    datetime_: datetime
     station_id: int
-    temperature_celsium: float
+    temperature_celsius: float
     moisture_perc: float
     wind_speed_kmh: float
     wind_direction: Literal["south", "north", "west", "east"]
@@ -45,9 +45,9 @@ def init_db():
     conn.execute('''
         CREATE TABLE IF NOT EXISTS packets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            datetime TEXT,
+            datetime_ TEXT,
             station_id INTEGER,
-            temperature_celsium REAL,
+            temperature_celsius REAL,
             moisture_perc REAL,
             wind_speed_kmh REAL,
             wind_direction TEXT,
@@ -65,13 +65,13 @@ def create_packet(packet: Packet):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO packets (datetime, station_id, temperature_celsium, moisture_perc,
+        INSERT INTO packets (datetime_, station_id, temperature_celsius, moisture_perc,
                              wind_speed_kmh, wind_direction, rain_meas_mm)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', (
-        packet.datetime,
+        packet.datetime_,
         packet.station_id,
-        packet.temperature_celsium,
+        packet.temperature_celsius,
         packet.moisture_perc,
         packet.wind_speed_kmh,
         packet.wind_direction,
@@ -117,9 +117,9 @@ def update_packet(packet_id: int, updated: Packet):
     # Update packet
     cursor.execute('''
         UPDATE packets SET
-            datetime = ?,
+            datetime_ = ?,
             station_id = ?,
-            temperature_celsium = ?,
+            temperature_celsius = ?,
             moisture_perc = ?,
             wind_speed_kmh = ?,
             wind_direction = ?,
@@ -128,7 +128,7 @@ def update_packet(packet_id: int, updated: Packet):
     ''', (
         updated.datetime,
         updated.station_id,
-        updated.temperature_celsium,
+        updated.temperature_celsius,
         updated.moisture_perc,
         updated.wind_speed_kmh,
         updated.wind_direction,
