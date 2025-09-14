@@ -31,6 +31,7 @@ The application supports inspecting and correcting erroneous measurement values 
 2. Open a new terminal and start the mock server:
 
     ```bash
+    source .venv/bin/activate
     cd src/mock_server
     uvicorn mock_server:app --reload --port 8000
     ```
