@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Python application designed for adding and correcting weather measurement data collected from base stations. It uses an OpenAPI-generated client to interact with a mock server implemented with FastAPI. The backend persists data in a SQLite database.
+Python application designed for adding and correcting weather measurement data collected from base stations. It uses an OpenAPI-generated client to interact with a mock server implemented with FastAPI. The backend persists data in a SQLite database.
 
 The application supports inspecting and correcting erroneous measurement values and includes some initial test data generated during development.
 
