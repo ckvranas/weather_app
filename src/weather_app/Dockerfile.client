@@ -41,5 +41,5 @@ COPY .env .
 # Set PYTHONPATH if needed so python can find your packages
 ENV PYTHONPATH=/app
 
-# Run the main entrypoint
-CMD ["python", "main.py"]
+# Run the main entrypoint. Short delay in order the mock server to be ready
+CMD ["sh", "-c", "sleep 1 && python main.py"] 
