@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -e  # Exit on error
 source .env
 VENV_DIR=".venv"
+REL_WEATHER_APP_PATH="src/weather_app"
 
 # Check if 'uv' is installed
 if ! command -v uv &> /dev/null; then
@@ -25,5 +25,11 @@ echo "Activating virtual environment..."
 source .venv/bin/activate
 
 uv sync
+
+if ! [ -d "${REL_WEATHER_APP_PATH}/packet-api-client" ]; then
+    echo "Creating packet-api-client..."
+    openapi-python-client generate --path ${REL_WEATHER_APP_PATH}/api_spec/openapi.yaml --output-path ${REL_WEATHER_APP_PATH}/packet-api-client
+    uv pip install -e ${REL_WEATHER_APP_PATH}/packet-api-client
+fi
 
 echo "Setup complete!"

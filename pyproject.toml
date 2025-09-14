@@ -1,6 +1,7 @@
 [project]
 name = "weather_app"
 version = "0.1.0"
+description = "Weather app collect and correct field measurements along with a mock server"
 requires-python = ">=3.10"
 dependencies = [
     "openapi-python-client == 0.26.1",
@@ -11,6 +12,11 @@ dependencies = [
     "pytest"
 ]
 
+[package]
+name = "weather_app"
+version = "0.1.0"
+source = { path = "src/weather_app", relative = true }
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -18,3 +24,4 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 testpaths = ["tests/"]
 python_files = ["test.py"]
+

@@ -2,5 +2,5 @@
 __pycache__/
 .venv/
 .vscode/
-src/weather_app.egg-info*
+weather_app.egg-info*
 packet-api-client/

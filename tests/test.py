@@ -1,8 +1,8 @@
 import pytest
-from unittest.mock import patch, call, Mock
+from unittest.mock import patch, Mock
 from datetime import datetime
 from packet_api_client.models import Packet
-from utils import inspect_correct_packets
+from weather_app.utils import inspect_correct_packets
 from packet_api_client import Client
 
 @pytest.fixture

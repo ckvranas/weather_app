@@ -10,7 +10,7 @@ import sqlite3
 from datetime import datetime
 
 load_dotenv()
-DB_PATH, TOKEN = os.getenv("DB_PATH"), os.getenv("TOKEN")
+DB_PATH, TOKEN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "packets.db"), os.getenv("TOKEN")
 
 app = FastAPI()
 security = HTTPBearer()
@@ -84,16 +84,16 @@ def create_packet(packet: Packet):
 # GET /packets
 @app.get("/packets", response_model=List[Packet], dependencies=[Depends(verify_token)])
 def get_packets(
-    datetime: None | datetime = Query(None),
+    datetime_: None | datetime = Query(None),
     station_id: int = Query(-1)) -> None:  
     conn = get_db_connection() 
     cursor = conn.cursor()
     if datetime is None and station_id == -1:
         cursor.execute('SELECT * FROM packets')
     elif datetime is not None and station_id != -1:
-        cursor.execute('SELECT * FROM packets WHERE datetime = ? AND station_id = ?', (datetime, station_id))
+        cursor.execute('SELECT * FROM packets WHERE datetime = ? AND station_id = ?', (datetime_, station_id))
     elif datetime is not None:
-        cursor.execute('SELECT * FROM packets WHERE datetime = ?', (datetime,))
+        cursor.execute('SELECT * FROM packets WHERE datetime = ?', (datetime_,))
     elif station_id != -1:
         cursor.execute('SELECT * FROM packets WHERE station_id = ?', (station_id,))
     else:
@@ -126,7 +126,7 @@ def update_packet(packet_id: int, updated: Packet):
             rain_meas_mm = ?
         WHERE id = ?
     ''', (
-        updated.datetime,
+        updated.datetime_,
         updated.station_id,
         updated.temperature_celsius,
         updated.moisture_perc,
